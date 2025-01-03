@@ -1,0 +1,27 @@
+
+  .forms-container{
+    display: flex;
+    justify-content: space-between;
+    margin: 100px auto;
+
+  }
+
+  .form-section{
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .form-section h1{
+    margin-bottom: 20px;
+  }
+  @media screen and (max-width: 767px) {
+    .forms-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin: 20px auto 70px;
+        
+        gap:5em;
+    
+      }
+  }
