@@ -2,7 +2,6 @@
 <br>
 This SketchFlow App will enable student to draw diagrams and work on the project in the same time.
 
-
 # Producer-Consumer System
 
 A highly robust, multi-threaded Producer-Consumer system built in Python. This project demonstrates safe concurrent data transfer between threads, strict resource management, and state synchronization using standard `wait/notify` concurrency mechanics.
@@ -24,7 +23,7 @@ This project was built with a strong focus on **Problem Decomposition**, **Criti
 The codebase is strictly modularized to separate data structures, core threading logic, error handling, and orchestration.
 
 ```text
-producer_consumer/
+ProducerConsumerSystem/
 ├── main.py                             # Entry point and demonstration script
 ├── output.json                         # Generated after a successful run
 ├── exceptions/
@@ -48,23 +47,36 @@ producer_consumer/
     └── test_e2e.py                     # Black-box lifecycle tests via the Manager
 
 ⚙️ Prerequisites & Installation
-•	Python 3.8+ is required.
+
+•	Python 3.13+ is required.
 •	No external packages or libraries are required (pip install is not necessary).
 Clone or extract the repository, and navigate to the root folder:
+
 Bash
-cd producer_consumer
+cd ProducerConsumerSystem
+
 💻 Usage
+
 To execute the main demonstration program, run:
+
 Bash
 python main.py
+
 Expected Behavior: The script will generate 20 sample items and begin transferring them. Because the queue capacity is 10, you will see the Producer fill the queue and pause, while the Consumer processes the items. The terminal will output real-time queue status updates (e.g., Queue Status: 5/10 items.).
 Once all items are processed, the system will shut down gracefully and save the final transferred data to output.json with human-readable timestamps.
+
+
 🧪 Testing
+
 The system includes a comprehensive, 3-tier testing pyramid to guarantee stability.
 To run the entire test suite (Unit, Integration, and End-to-End), execute the following command from the root directory:
+
 Bash
 python -m unittest discover -s tests
+
+
 🏗️ Design Decisions & Architecture
+
 1.	threading.Condition over simple Lock: While a standard Lock provides mutual exclusion, Condition variables provide the exact wait(), notify(), and notify_all() methods required for threads to efficiently communicate changes in the queue's state without aggressive, CPU-heavy polling.
 2.	Custom Exception Hierarchy: Standard Python exceptions lack domain context. By creating explicit errors like QueueClosedError, the threads know exactly why an operation failed and how to recover or shut down safely.
 3.	Manager Pattern: The DataTransferManager abstracts the complexities of thread management (start(), join(), and cleanup) away from the main application layer, ensuring the high-level API remains clean and misuse-resistant.
