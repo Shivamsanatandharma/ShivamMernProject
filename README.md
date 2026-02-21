@@ -1,83 +1,82 @@
 # D-Board
 <br>
 This SketchFlow App will enable student to draw diagrams and work on the project in the same time.
+Sales Analytics Application
+A robust, functional-programming-driven analytics engine built in Python. This application processes multiple CSV datasets to perform complex aggregations, grouping by multiple dimensions, and statistical summaries.
 
-# Producer-Consumer System
+The project is architected to demonstrate a deep understanding of Functional Streams, Modular Design, and Robust Error Handling.
 
-A highly robust, multi-threaded Producer-Consumer system built in Python. This project demonstrates safe concurrent data transfer between threads, strict resource management, and state synchronization using standard `wait/notify` concurrency mechanics.
+🛠️ Technical Implementation: "Streams API" in Python
+The challenge requirements specified the use of Stream-like operations. This application achieves these using Python's native functional toolkit:
 
-This project was built with a strong focus on **Problem Decomposition**, **Critical Thinking** (explicit error handling and edge-case management), and **Code Quality**.
+filter() & collect(): Used for date range and regional filtering.
 
-## 🚀 Features & Rule Enforcement
+map() & reduce(): Utilized via functools.reduce for calculating global revenue and transforming data objects.
 
-* **Strict Capacity Limits:** The shared queue strictly enforces a maximum capacity of 10 items.
-* **Thread Synchronization:** * The **Producer** thread safely blocks (waits) when the queue reaches maximum capacity.
-  * The **Consumer** thread safely blocks (waits) when the queue is entirely empty.
-* **Fail-Fast Exception Handling:** Custom domain-specific exceptions (`QueueOverflowError`, `QueueEmptyError`, `QueueClosedError`) are implemented to handle timeouts and state violations predictably, avoiding infinite hangs or silent data corruption.
-* **Graceful Termination:** The system safely broadcasts termination signals (`notify_all()`) to ensure blocked threads wake up and exit cleanly once all data is processed or upon manual interruption (Ctrl+C).
-* **Data Persistence:** Automatically formats timestamps for readability and saves the final safely transferred data into a structured `output.json` file.
-* **Zero External Dependencies:** Built entirely using Python's standard library (`threading`, `unittest`, `time`, `json`, `datetime`).
+groupingBy() & summarizingDouble(): Implemented using collections.defaultdict for high-performance, single-pass data aggregation and summarization.
 
-## 📁 Project Structure
+📁 Folder Structure
 
-The codebase is strictly modularized to separate data structures, core threading logic, error handling, and orchestration.
-
-```text
-ProducerConsumerSystem/
-├── main.py                             # Entry point and demonstration script
-├── output.json                         # Generated after a successful run
+Shutterstock
+Explore
+Plaintext
+sales_analytics/
+├── main.py                             # Application entry point & demonstration
+├── data/
+│   ├── sales_data.csv                  # Quarter 1 Dataset
+│   ├── sales_data_q2.csv               # Quarter 2 Dataset
+│   └── analytics_summary.json          # Auto-generated analytical report
 ├── exceptions/
 │   ├── __init__.py
-│   └── transfer_exceptions.py          # Custom hierarchy for precise error handling
+│   └── sales_exceptions.py             # Custom domain-specific exceptions
 ├── models/
 │   ├── __init__.py
-│   └── item.py                         # Data container (id, data, formatted timestamp)
+│   └── sale_record.py                  # Data model with auto-calculated attributes
 ├── core/
 │   ├── __init__.py
-│   ├── shared_queue.py                 # Thread-safe queue utilizing condition variables
-│   ├── producer.py                     # Source data ingestion thread
-│   └── consumer.py                     # Destination data extraction thread
-├── managers/
-│   ├── __init__.py
-│   └── data_transfer_manager.py        # High-level orchestrator for the system
+│   ├── sales_data_loader.py            # Multi-file I/O & Fail-Fast validation logic
+│   └── sales_analyzer.py               # Functional analytics & JSON export engine
 └── tests/
     ├── __init__.py
-    ├── test_unit.py                    # Isolated logic and exception tests via Mocks
-    ├── test_integration.py             # Thread synchronization tests (wait/notify)
-    └── test_e2e.py                     # Black-box lifecycle tests via the Manager
+    ├── test_unit.py                    # Isolated logic tests for aggregations
+    ├── test_integration.py             # Exception handling & I/O validation tests
+    └── test_e2e.py                     # Full lifecycle tests with multiple files
+🚀 Key Features
+Multi-File Scaling: Automatically scans and processes all .csv files within the data/ directory.
 
-⚙️ Prerequisites & Installation
+Fail-Fast Data Validation: Row-by-row validation catches malformed data (KeyErrors, ValueErrors) and reports the exact file and row number without crashing the suite.
 
-•	Python 3.13+ is required.
-•	No external packages or libraries are required (pip install is not necessary).
-Clone or extract the repository, and navigate to the root folder:
+Rich Analytics:
 
-Bash
-cd ProducerConsumerSystem
+Total Sales by Region.
 
-💻 Usage
+Average Sale Price by Product Category.
 
-To execute the main demonstration program, run:
+Top Performers (Ranking by revenue).
 
+Chronological Monthly Sales Trends.
+
+Data Export: Generates a structured, human-readable analytics_summary.json for external system consumption.
+
+⚙️ Prerequisites & Execution
+Python 3.8+
+
+Zero external library dependencies: Uses only Python Standard Library (csv, functools, collections, json, datetime, glob).
+
+1. Run the Analytics
 Bash
 python main.py
-
-Expected Behavior: The script will generate 20 sample items and begin transferring them. Because the queue capacity is 10, you will see the Producer fill the queue and pause, while the Consumer processes the items. The terminal will output real-time queue status updates (e.g., Queue Status: 5/10 items.).
-Once all items are processed, the system will shut down gracefully and save the final transferred data to output.json with human-readable timestamps.
-
-
-🧪 Testing
-
-The system includes a comprehensive, 3-tier testing pyramid to guarantee stability.
-To run the entire test suite (Unit, Integration, and End-to-End), execute the following command from the root directory:
+2. Run the Test Suite
+The project includes a 3-tier testing pyramid using unittest and tempfile.
 
 Bash
 python -m unittest discover -s tests
+⚠️ Exception Handling
+The system implements a custom exception hierarchy to satisfy robustness requirements:
 
+DataLoadError: Raised for file-level issues (File not found, directory access errors).
 
-🏗️ Design Decisions & Architecture
+MalformedDataError: Raised when a CSV row contains invalid types (e.g., text in a quantity column) or missing headers.
 
-1.	threading.Condition over simple Lock: While a standard Lock provides mutual exclusion, Condition variables provide the exact wait(), notify(), and notify_all() methods required for threads to efficiently communicate changes in the queue's state without aggressive, CPU-heavy polling.
-2.	Custom Exception Hierarchy: Standard Python exceptions lack domain context. By creating explicit errors like QueueClosedError, the threads know exactly why an operation failed and how to recover or shut down safely.
-3.	Manager Pattern: The DataTransferManager abstracts the complexities of thread management (start(), join(), and cleanup) away from the main application layer, ensuring the high-level API remains clean and misuse-resistant.
-
+📊 Sample JSON Output
+The generated analytics_summary.json provides a machine-readable snapshot of the business health:
