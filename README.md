@@ -4,137 +4,89 @@ This SketchFlow App will enable student to draw diagrams and work on the project
 
 
 📊 Sales Analytics Application
+A robust, functional-programming-driven analytics engine built in Python. This application processes CSV files containing sales data to perform complex aggregations, grouping by multiple dimensions, and statistical summaries. 
 
-A Python-based sales analytics engine that processes multiple CSV datasets and performs advanced aggregations, filtering, grouping, and statistical analysis using a functional-programming approach inspired by the Streams API.
 
-The system is designed to demonstrate modular architecture, clean data modeling, robust exception handling, and stream-style transformations using only Python’s standard library.
 
-🚀 Features
+The project is architected to strictly adhere to the challenge requirements, demonstrating a deep understanding of **Functional Streams**, **Modular Design**, and **Robust Error Handling** without relying on heavy external libraries like Pandas.
 
-Filter sales by date range, region, or category
+## 🛠️ Technical Implementation: "Streams API" in Python
 
-Group data by multiple dimensions
+The challenge specifies the use of Java-style Stream operations. This application achieves these elegantly using Python's native functional toolkit:
+* **`filter()` & `collect()`**: Handled via Python's built-in `filter()` and list comprehensions to isolate specific date ranges.
+* **`map()` & `reduce()`**: Utilized via `map()` and `functools.reduce()` for calculating global revenue and transforming data objects.
+* **`groupingBy()` & `summarizingDouble()`**: Implemented using `collections.defaultdict` for high-performance, single-pass data aggregation and summarization across dimensions like Region, Category, and Month.
 
-Compute totals and statistical summaries
+## 📁 Folder Structure
 
-Identify top-performing salespersons
-
-Generate monthly sales trends
-
-Export a structured JSON summary report
-
-Automatic processing of all CSV files in the data/ directory
-
-Fail-fast validation for malformed rows and missing fields
-
-🧠 Functional “Streams API” Approach in Python
-
-Stream-like operations are implemented using Python’s functional tools:
-
-filter() → date/region/category filtering
-
-map() → transforming rows into domain objects
-
-reduce() → global aggregations like revenue totals
-
-defaultdict → grouping and summarization
-
-Single-pass aggregation for efficiency
-
-🗂️ Project Structure
+```text
 sales_analytics/
-├── main.py
+├── main.py                             # Application entry point & demonstration
 ├── data/
+│   ├── sales_data.csv                  # Sample Sales Dataset
+│   └── analytics_summary.json          # Auto-generated analytical report
 ├── exceptions/
-│   └── sales_exceptions.py
+│   ├── __init__.py
+│   └── sales_exceptions.py             # Custom domain-specific exceptions
 ├── models/
-│   └── sale_record.py
+│   ├── __init__.py
+│   └── sale_record.py                  # Data model with auto-calculated attributes
 ├── core/
-│   ├── sales_data_loader.py
-│   └── sales_analyzer.py
+│   ├── __init__.py
+│   ├── sales_data_loader.py            # Multi-file I/O & Fail-Fast validation logic
+│   └── sales_analyzer.py               # Functional analytics engine
 └── tests/
-🧩 Core Classes
-SaleRecord
+    ├── __init__.py
+    ├── test_unit.py                    # Tests isolated map/reduce/filter logic
+    ├── test_integration.py             # Tests specific custom exception triggers
+    └── test_e2e.py                     # Full lifecycle tests with multiple files
 
-Represents a single transaction with attributes:
+```
 
-transactionId
+## 🚀 Key Features
 
-date
+* **Dynamic Data Loading**: Scans the `data/` directory and aggregates data from multiple `.csv` files automatically.
+* **Fail-Fast Data Validation**: Row-by-row validation catches malformed data (missing columns, invalid types) and reports the exact file and row number.
+* **Rich Analytics Engine**:
+* `getTotalSalesByRegion()`: Calculates revenue grouped by region.
+* `getAverageSaleByCategory()`: Computes average transaction values per product category.
+* `getTopSalespersons(n)`: Identifies the highest-performing staff dynamically.
+* `getMonthlySalesTrend()`: Groups data chronologically to track performance over time.
+* `getSalesByDateRange()`: Filters the dataset between two specific dates.
 
-region
 
-salesperson
+* **Automated Reporting**: Generates a structured, human-readable `analytics_summary.json` for external system consumption.
 
-productCategory
+## ⚙️ Prerequisites & Execution
 
-quantity
+* **Python 3.8+**
+* **Zero external dependencies**: Built entirely using the Python Standard Library (`csv`, `functools`, `collections`, `json`, `datetime`, `glob`).
 
-unitPrice
+### 1. Run the Analytics
 
-totalAmount
+To execute the application and generate the reports:
 
-SalesDataLoader
-
-Loads and validates CSV files
-
-Converts rows into SaleRecord objects
-
-Raises exceptions for file or data issues
-
-SalesAnalyzer
-
-Provides the main analytics operations:
-
-getTotalSalesByRegion()
-
-getAverageSaleByCategory()
-
-getTopSalespersons(n)
-
-getMonthlySalesTrend()
-
-getSalesByDateRange()
-
-generateSummaryReport()
-
-All analytics methods use functional/stream-style processing.
-
-⚠️ Exception Handling
-
-Custom exception hierarchy ensures robust execution:
-
-DataLoadError → file access or missing data files
-
-MalformedDataError → invalid CSV format, types, or headers
-
-Errors include file name and row number for easy debugging.
-
-▶️ Running the Application
-Requirements
-
-Python 3.8+
-
-No external dependencies
-
-Run Analytics
+```bash
 python main.py
-Run Tests
+
+```
+
+### 2. Run the Test Suite
+
+The project includes a comprehensive 3-tier testing pyramid (Unit, Integration, End-to-End) utilizing `unittest` and `tempfile` to ensure isolated, reproducible testing.
+
+```bash
 python -m unittest discover -s tests
-📄 Sample Output
 
-The application generates:
+```
 
-data/analytics_summary.json
+## ⚠️ Exception Handling
 
-Containing:
+The system implements a custom exception hierarchy to ensure the application fails gracefully and provides actionable debugging information:
 
-Global revenue
+1. **`DataLoadError`**: Raised for file-level issues (e.g., File not found, directory access errors).
+2. **`MalformedDataError`**: Raised when a CSV row contains invalid types (e.g., text in a numerical quantity column) or missing data.
 
-Regional performance
+```
 
-Top salespersons
-
-Monthly trends
-
-Metadata about the report
+```
